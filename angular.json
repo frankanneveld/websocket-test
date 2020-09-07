@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "websocket-reconnect"
+    }
+  },
+  "defaultProject": "websocket-reconnect",
+  "cli": {
+    "analytics": false
+  }
 }
