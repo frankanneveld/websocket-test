@@ -1,3 +1,7 @@
-<h3>Websocket</h3>
+<span><h3>Websocket</h3></span>
+<span><button (click)="closeSocket()">Close Socket</button></span>
 <hr>
-<div>{{websocketService.message$ | async | json}}</div>
+<!-- <input type="text" placeholder="say something" (keyup.enter)="sendMessage($event.target.value)"/> -->
+<pre>
+    <div>{{websocketService.message$ | async | json}}</div>
+</pre>

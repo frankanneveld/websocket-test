@@ -1,5 +1,10 @@
 "use strict";
 
+const timer = setInterval(() => {
+  const date = JSON.stringify(new Date());
+  sendMessage(`{ "interval" : ${date} }`);
+}, 1000);
+
 const serverPort = 3000,
     http = require("http"),
     express = require("express"),
@@ -19,13 +24,8 @@ websocketServer.on('connection', (webSocketClient) => {
     //when a message is received
     webSocketClient.on('message', (message) => {
         console.log('Message: \x1b[32m %s \x1b[0m', message);
-        //for each websocket client
-        websocketServer
-        .clients
-        .forEach( client => {
-            //send the client the current message
-            client.send(`{ "message" : ${message} }`);
-        });
+        const date = JSON.stringify(new Date());
+        sendMessage(`{ "message" : ${message} ,"date" : ${date}}`);
     });
 
     // Ignore ECONNRESET and re throw anything else
@@ -35,6 +35,14 @@ websocketServer.on('connection', (webSocketClient) => {
       }
     });
 });
+
+function sendMessage(message) {
+  websocketServer
+  .clients
+  .forEach( client => {
+      client.send(message);
+  });
+}
 
 //start the web server
 server.listen(serverPort, () => {

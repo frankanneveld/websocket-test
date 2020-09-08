@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { tap } from 'rxjs/operators';
 import { WebsocketService } from './services/websocket.service';
 
 @Component({
@@ -8,18 +7,20 @@ import { WebsocketService } from './services/websocket.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  // public test;
-  // public messages$ = this.websocketService.messages$.pipe(
-  //   tap( c => console.log(c) )
-  // );
-
   constructor(public websocketService: WebsocketService) {
-    // this.websocketService.messages$.subscribe(message => console.log(message));
   }
 
   ngOnInit(): void {
     console.log('app init');
     this.websocketService.sendMessage('Hello Frank');
+  }
 
+  public closeSocket():void {
+    this.websocketService.close();
+  }
+
+  public sendMessage(message: string): void {
+    console.log('Send : ', message);
+    this.websocketService.sendMessage(message);
   }
 }
