@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { catchError, retryWhen, tap, delay } from 'rxjs/operators';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
+import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
+import { retryWhen, delay, catchError } from 'rxjs/operators';
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,22 +13,27 @@ export class WebsocketService {
   public message$: ReplaySubject<{}> = new ReplaySubject<{}>();
 
   constructor() {
-    this.connect();
+    this.socket$ ? this.resetConnection : this.connect();
   }
 
   private connect(): void {
     this.socket$ = webSocket({
       url: 'ws://127.0.0.1:3000',
       openObserver: { next: () => console.log('open socket connection') },
-      closeObserver: { next: () => this.connect() },
-      closingObserver: { next: () => console.log('closing socket connection') }
+      closeObserver: { next: () => console.log('close socket connection') },
+      closingObserver: { next: () => this.resetConnection() }
     });
 
-    this.socket$.pipe(retryWhen( err => err.pipe(delay(4000)))).subscribe(
+    this.socket$.pipe(retryWhen( errors => errors.pipe(delay(4000)))).subscribe(
         message => this.message$.next({ message }),
         () => () => catchError(e => { throw e; }),
         () => console.log('complete and closed')
       );
+  }
+
+  private resetConnection(): void {
+    this.socket$ = null;
+    this.connect();
   }
 
   public sendMessage(msg: any): void {

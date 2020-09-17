@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { WebsocketService } from './services/websocket.service';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,7 +13,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('app init');
-    this.websocketService.sendMessage('Hello Frank');
+    this.websocketService.sendMessage('APP INIT');
   }
 
   public closeSocket():void {
